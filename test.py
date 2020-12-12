@@ -25,7 +25,7 @@ if __name__ == "__main__":
     for path in imgs_path_list:
         img = cv2.imread(os.path.join(data_path, path))
         imgs_cv_list.append(img)
-    # 质量评估模块会过滤掉 尺寸<=filter_size、高宽比异常的图片
+
     score, imgs_cv_list = evaluate.quality_evaluate(imgs_cv_list, frame_shape, filter_size)
     best_image_index = score.argmax(axis=0)[-1]
     best_image_cv2 = imgs_cv_list[best_image_index]

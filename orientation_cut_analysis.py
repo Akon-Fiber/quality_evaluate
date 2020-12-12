@@ -42,10 +42,7 @@ class OrientationCutAnalysis(object):
         return
 
     def predict(self, imgs):
-        """
-        Args:
-            imgs: [N, Height, Width, 3], BGR mode
-        """
+
         imgs = torch.from_numpy(imgs.astype(np.float32)) 
         imgs = imgs.to(self.__parameters.device)
         imgs = imgs[:, :, :, [2, 1, 0]]

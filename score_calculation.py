@@ -12,13 +12,13 @@ from orientation_cut_analysis import OrientationCutAnalysis
 
 class ScoreCalculation(object):
     def __init__(self, args):
-        # 朝向、截断模型初始化
+
         self.__orientation_cut_analysis = OrientationCutAnalysis(
             model_path=args.attribute_model_path,
             gpu_ids=args.gpu_ids
         )
 
-    # 基于sobel算子的模糊分数计算
+
     def __sobel_blur_score(self, image):
         array_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
         gray_image = array_image.convert("L")
@@ -27,7 +27,7 @@ class ScoreCalculation(object):
         score = cv2.mean(tmp)[0]
         return score
 
-    # 获取图片尺寸信息
+
     def __get_image_size_info(self, images_via_filtering):
         height_info = list()
         width_info = list()
@@ -37,7 +37,7 @@ class ScoreCalculation(object):
             width_info.append(img_size[1])
         return height_info, width_info
 
-    # 获取图片清晰度信息
+
     def __get_image_blur_info(self, images_via_filtering):
         blur_info = list()
         for img in images_via_filtering:
@@ -45,7 +45,7 @@ class ScoreCalculation(object):
             blur_info.append(blur_score)
         return blur_info
 
-    # 获取图片朝向、截断信息
+
     def __get_image_orientation_cut_info(self, images_via_filtering):
         orientation_cut_info = None
         for index, img in enumerate(images_via_filtering):
@@ -60,36 +60,36 @@ class ScoreCalculation(object):
                 orientation_cut_info = np.vstack((orientation_cut_info, normal_indexes))
         return orientation_cut_info
 
-    # 综合评分模块
+
     def assessment(self, images_via_filtering):
         images_num = len(images_via_filtering)
-        # 获取图片尺寸信息
+
         height_info, width_info = self.__get_image_size_info(images_via_filtering)
-        # 获取图片清晰度信息
+
         blur_info = self.__get_image_blur_info(images_via_filtering)
-        # 获取图片朝向、截断信息
+
         images_to_resize = images_via_filtering.copy()
         orientation_cut_info = self.__get_image_orientation_cut_info(images_to_resize)
         img_info = np.array([height_info, width_info, blur_info]).T
         img_info = np.hstack((orientation_cut_info, img_info))
         np.array(img_info)
         images_score = np.ones((images_num, 6)).astype("float64")
-        # 计算宽高比得分
+
         images_score[:, 0] = abs(img_info[:, 2] / img_info[:, 3] - 2.5)
-        # 计算分辨率得分
+
         images_score[:, 1] = img_info[:, 2] * img_info[:, 3]
-        # 计算清晰度得分
+
         images_score[:, 4] = img_info[:, 4]
         images_score = images_score / images_score.max(axis=0)
-        # 计算朝向得分
+
         images_score[:, 2] = img_info[:, 0]
         images_score[:, 2][images_score[:, 2] >= 2.0] = 0.75
         images_score[:, 2][images_score[:, 2] == 1.0] = 0.5
         images_score[:, 2][images_score[:, 2] == 0.0] = 1.0
-        # 计算截断得分
+
         images_score[:, 3] = img_info[:, 1]
         images_score[:, 3][images_score[:, 3] == 1.0] = 0.5
         images_score[:, 3][images_score[:, 3] == 0.0] = 1.0
-        # 获得行人图片质量总分数
+
         images_score[:, 5] = -0.5 * images_score[:, 0] + 1.5 * images_score[:, 1] + images_score[:, 2] + images_score[:, 3] + images_score[:, 4]
         return images_score

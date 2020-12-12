@@ -5,13 +5,13 @@
 class QualityParameters(object):
 
     def __init__(self):
-        # model parameters-------------------------------------------------------------------------
+        
         self.resize = (224, 224)
         self.mean = [0.485, 0.456, 0.406]
         self.std = [0.229, 0.224, 0.225]
-        # -----------------------------------------------------------------------------------------
+       
         self.attribute_dict = {
-            # abstract overall attribute--------------------------------------------------------------------
+            
             "Body orientation":
                 ['front', 'back', 'left', 'right'],
             "cut":
