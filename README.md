@@ -11,3 +11,6 @@
 
 在本目录下提供了一个简单的例子`test.py`，测试数据存放于`test_data`目录下，安装`requirements.txt`中的包后，运行指令`python3 test.py`
 
+##### **使用固化模型推理**
+
+使用固化模型推理源码及使用方法详见torchScript
