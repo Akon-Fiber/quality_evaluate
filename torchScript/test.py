@@ -10,7 +10,7 @@ from quality_evaluate import QualityEvaluate
 class Parameter(object):
     def __init__(self):
         self.gpu_ids = [0]
-        self.attribute_model_path = "./model/quality_evaluate_v0.0.1_478f086d5f01def75aec25ae593406bc.zip"
+        self.attribute_model_path = "./model/quality_evaluate_v0.0.1_478f086d5f01def75aec25ae593406bc.pt"
 
 
 if __name__ == "__main__":
